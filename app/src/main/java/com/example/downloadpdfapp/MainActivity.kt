@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             }
         }).get(MainActivityViewModel::class.java)
 
-        viewModel.isFileReadyObserver.observe(this, Observer <Boolean>{
+        viewModel._isFileReadyObserver.observe(this, Observer <Boolean>{
             binding.progressBar.visibility = View.GONE
 
             if(!it) {

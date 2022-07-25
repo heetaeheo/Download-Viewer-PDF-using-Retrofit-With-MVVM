@@ -15,7 +15,7 @@ class MainActivityViewModel(val fileDir : File) : ViewModel() {
     private var pdfFileName: File
     private var dirPath: String
     private var fileName: String
-    var isFileReadyObserver = MutableLiveData<Boolean>()
+     val _isFileReadyObserver = MutableLiveData<Boolean>()
 
     init {
         dirPath = "${fileDir}/cert/pdffiles"
@@ -38,7 +38,7 @@ class MainActivityViewModel(val fileDir : File) : ViewModel() {
             val retroServiceInterface =  RetrofitInstance.getRetroInstance().create(RetrofitService::class.java)
             retroServiceInterface.downloadPdfFile(pdfUrl).enqueue(object : Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    isFileReadyObserver.postValue(false)
+                    _isFileReadyObserver.postValue(false)
                 }
 
                 override fun onResponse(
@@ -52,11 +52,11 @@ class MainActivityViewModel(val fileDir : File) : ViewModel() {
                         result?.let {
                             writeToFile(it)
                         }?:kotlin.run {
-                            isFileReadyObserver.postValue(false)
+                            _isFileReadyObserver.postValue(false)
                         }
                     }
                     else
-                        isFileReadyObserver.postValue(false)
+                        _isFileReadyObserver.postValue(false)
                 }
             })
         }
@@ -77,10 +77,10 @@ class MainActivityViewModel(val fileDir : File) : ViewModel() {
             } while (read != -1)
             fos.flush()
             fos.close()
-            isFileReadyObserver.postValue(true)
+            _isFileReadyObserver.postValue(true)
         }catch ( e: IOException) {
             Log.e("====", "====IOException : "+e )
-            isFileReadyObserver.postValue(false)
+            _isFileReadyObserver.postValue(false)
         }
     }
 }
